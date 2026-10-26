@@ -9,6 +9,8 @@ jobs:
         with: { distribution: temurin, java-version: 25 }
       - uses: gradle/actions/setup-gradle@v4
         with: { gradle-version: "9.6.0" }
-      - run: gradle build
+      - name: Build
+        run: |
+          gradle build --stacktrace > build.log 2>&1 || { grep -E "error:|What went wrong|Could not|Caused by|not found|FAILED|^> " build.log | head -25 | while IFS= read -r l; do echo "::error::${l:0:300}"; done; exit 1; }
       - uses: actions/upload-artifact@v4
         with: { name: ramsaver-jar, path: build/libs/*.jar }
