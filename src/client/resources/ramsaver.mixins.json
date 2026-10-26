@@ -1,0 +1,8 @@
+{
+  "required": false,
+  "minVersion": "0.8",
+  "package": "com.ramsaver.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "client": ["ParticleEngineMixin", "SoundEngineMixin", "BlockEntityRenderDispatcherMixin", "EntityRenderDispatcherMixin", "ClientLevelMixin"],
+  "injectors": { "defaultRequire": 0 }
+}

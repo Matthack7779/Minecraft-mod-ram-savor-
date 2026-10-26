@@ -43,4 +43,4 @@ jobs:
         with:
           tag_name: latest
           name: RAM Saver (latest build)
-          files: build/libs/ramsaver-1.0.0.jar
+          files: build/libs/ramsaver-1.1.0.jar

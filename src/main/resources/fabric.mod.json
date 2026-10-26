@@ -8,6 +8,7 @@
   "license": "MIT",
   "environment": "client",
   "entrypoints": { "client": ["com.ramsaver.RamSaverClient"] },
+  "mixins": [{ "config": "ramsaver.mixins.json", "environment": "client" }],
   "depends": {
     "fabricloader": ">=0.20.1",
     "minecraft": "~26.3",

@@ -18,6 +18,7 @@ public class RamSaverClient implements ClientModInitializer {
 	@Override
 	public void onInitializeClient() {
 		Config.load();
+		writeJvmArgs();
 
 		ClientTickEvents.END_CLIENT_TICK.register(mc -> {
 			if (!started && mc.options != null) {
@@ -41,6 +42,21 @@ public class RamSaverClient implements ClientModInitializer {
 						b -> mc.setScreenAndShow(new SettingsScreen(screen))).bounds(4, 4, 80, 20).build());
 			}
 		});
+	}
+
+	private static void writeJvmArgs() {
+		try {
+			java.nio.file.Path f = net.fabricmc.loader.api.FabricLoader.getInstance().getConfigDir().resolve("ramsaver-jvm-args.txt");
+			if (java.nio.file.Files.exists(f)) return;
+			java.nio.file.Files.writeString(f, String.join("\n",
+				"# Recommended low-RAM JVM arguments (Java 25). Paste into your launcher's JVM arguments box.",
+				"# Keep your own -Xmx. Remove any other GC flags (G1/Aikar) first.",
+				"-XX:+UseSerialGC -XX:+UseCompactObjectHeaders",
+				"-XX:MinHeapFreeRatio=10 -XX:MaxHeapFreeRatio=20 -Xms256M",
+				"-XX:MaxMetaspaceSize=256M -XX:ReservedCodeCacheSize=128M -XX:MaxDirectMemorySize=768M",
+				"-Xss512k -XX:CICompilerCount=2 -XX:+UseStringDeduplication",
+				""));
+		} catch (Exception e) { LOG.warn("Could not write jvm args file", e); }
 	}
 
 	static int parseGc() {
