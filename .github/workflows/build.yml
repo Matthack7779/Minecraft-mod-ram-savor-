@@ -16,6 +16,27 @@ jobs:
           gradle build --stacktrace > build.log 2>&1 || { grep -E "error:|What went wrong|Could not|Caused by|not found|FAILED|^> " build.log | head -25 | while IFS= read -r l; do echo "::error::${l:0:300}"; done; exit 1; }
       - uses: actions/upload-artifact@v4
         with: { name: ramsaver-jar, path: build/libs/*.jar }
+      - name: Dump Minecraft API
+        run: |
+          J=""
+          for f in $(find ~/.gradle -name '*.jar' -size +5M); do
+            if unzip -l "$f" 2>/dev/null | grep -q 'net/minecraft/client/Minecraft.class'; then J="$f"; break; fi
+          done
+          echo "jar: $J"
+          mkdir -p dump
+          unzip -Z1 "$J" | grep '\.class$' | sed 's/\.class$//' | sort > dump/classes.txt
+          grep -E '^net/minecraft/(client|world/entity|world/level/block/entity|util)/' dump/classes.txt | tr / . | grep -v '\$[0-9]' > dump/list.txt
+          xargs -a dump/list.txt -n 200 javap -p -cp "$J" > dump/api.txt 2>&1 || true
+          gzip dump/api.txt
+          ls -la dump
+      - name: Publish API dump
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: apidump
+          name: Minecraft API dump
+          files: |
+            dump/api.txt.gz
+            dump/classes.txt
       - name: Publish release
         if: github.ref == 'refs/heads/main'
         uses: softprops/action-gh-release@v2
