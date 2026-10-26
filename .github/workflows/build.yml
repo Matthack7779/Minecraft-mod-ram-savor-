@@ -1,5 +1,7 @@
 name: build
 on: [push, workflow_dispatch]
+permissions:
+  contents: write
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -14,3 +16,10 @@ jobs:
           gradle build --stacktrace > build.log 2>&1 || { grep -E "error:|What went wrong|Could not|Caused by|not found|FAILED|^> " build.log | head -25 | while IFS= read -r l; do echo "::error::${l:0:300}"; done; exit 1; }
       - uses: actions/upload-artifact@v4
         with: { name: ramsaver-jar, path: build/libs/*.jar }
+      - name: Publish release
+        if: github.ref == 'refs/heads/main'
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: latest
+          name: RAM Saver (latest build)
+          files: build/libs/ramsaver-1.0.0.jar
