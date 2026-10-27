@@ -14,7 +14,7 @@ public final class Settings {
 
 	public static final String GC = "gcSeconds";
 
-	// 36 settings = 3 pages of 12. Preset order: Light, Medium, Heavy, Extreme, Insane
+	// 35 settings. Preset order: Light, Medium, Heavy, Extreme, Insane
 	public static final List<Setting> ALL = List.of(
 		// ---- page 1: world / entities / memory
 		s("renderDistance", "Render distance", a("renderDistance"), a("-","2","3","4","5","6","8","10","12"), "8","6","4","2","2"),
@@ -39,7 +39,6 @@ public final class Settings {
 		s("transp", "Improved transparency", a("improvedTransparency"), a("-","false"), "-","-","false","false","false"),
 		s("chunkFade", "Chunk fade-in time", a("chunkSectionFadeInTime"), a("-","0.0"), "-","-","0.0","0.0","0.0"),
 		s("mipmaps", "Mipmap levels", a("mipmapLevels"), a("-","0","1","2","4"), "-","2","0","0","0"),
-		s("aniso", "Anisotropic filtering", a("maxAnisotropyBit"), a("-","0"), "-","-","0","0","0"),
 		s("texFilter", "Texture filtering", a("textureFiltering"), a("-","NONE"), "-","-","NONE","NONE","NONE"),
 		s("biomeBlend", "Biome blend", a("biomeBlendRadius"), a("-","0","1","3","5"), "-","1","0","0","0"),
 		// ---- page 3: hardcore removal / effects
